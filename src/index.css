@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14% 15%;
+    --muted: 30 30% 96%;
+    --muted-foreground: 20 14% 40%;
+    --primary: 27 58% 59%;
+    --primary-foreground: 0 0% 100%;
+    --border: 30 20% 90%;
+
+    --wedding-cream: 47 55% 95%;
+    --wedding-paper: 30 27% 96%;
+    --wedding-blush: 350 60% 92%;
+    --wedding-sage: 140 20% 75%;
+    --wedding-accent: 27 58% 59%;
+    --wedding-text: 20 14% 15%;
+    --wedding-olive: 90 24% 24%;
+    --wedding-gold: 30 58% 77%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}

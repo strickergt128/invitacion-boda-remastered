@@ -1,0 +1,10 @@
+[
+  { "id": "familia-perez", "nombre": "Familia Pérez", "pases": 4, "telefono": "" },
+  { "id": "maria-gonzalez", "nombre": "María González", "pases": 2, "telefono": "" },
+  { "id": "jose-hernandez", "nombre": "José Hernández", "pases": 1, "telefono": "" },
+  { "id": "familia-lopez-martinez", "nombre": "Familia López Martínez", "pases": 5, "telefono": "" },
+  { "id": "ana-y-carlos", "nombre": "Ana y Carlos", "pases": 2, "telefono": "" },
+  { "id": "sofia-ramirez", "nombre": "Sofía Ramírez", "pases": 1, "telefono": "" },
+  { "id": "familia-sanchez", "nombre": "Familia Sánchez", "pases": 3, "telefono": "" },
+  { "id": "luis-torres", "nombre": "Luis Torres", "pases": 2, "telefono": "" }
+]
