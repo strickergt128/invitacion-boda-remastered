@@ -7,15 +7,19 @@ type Props = {
   onAbrir: () => void;
   /** Se llama cuando el video del intro terminó de descargarse (o no existe). */
   onDescargado?: () => void;
+  /** Se llama cuando el sobre empieza a desvanecerse (para que la portada entre a la vez). */
+  onSalir?: () => void;
   /** Se llama cuando termina el desvanecido y la invitación queda visible. */
   onTerminar: () => void;
 };
 
-const TRANSICION = "1.5s cubic-bezier(0.4, 0, 0.2, 1)";
+// Salida tipo telón: se abre mostrando la portada (curva fuerte de la skill "animate")
+const DURACION_SALIDA_MS = 1200;
+const TRANSICION = `${DURACION_SALIDA_MS}ms var(--ease-out)`;
 // Si tras tocar el video todavía no termina de descargarse en este tiempo, abrimos la invitación
 const ESPERA_MAXIMA_MS = 8000;
 
-export default function IntroOverlay({ onAbrir, onDescargado, onTerminar }: Props) {
+export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTerminar }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const iniciado = useRef(false);
   const cerrado = useRef(false);
@@ -32,7 +36,8 @@ export default function IntroOverlay({ onAbrir, onDescargado, onTerminar }: Prop
     cerrado.current = true;
     clearTimeout(espera.current);
     setSaliendo(true);
-    setTimeout(onTerminar, 1500);
+    onSalir?.();
+    setTimeout(onTerminar, DURACION_SALIDA_MS);
   };
 
   const reproducir = () => {
@@ -98,7 +103,7 @@ export default function IntroOverlay({ onAbrir, onDescargado, onTerminar }: Prop
   return (
     <div
       className={`fixed inset-0 z-50 cursor-pointer ${saliendo ? "pointer-events-none" : ""}`}
-      style={{ backgroundColor: "#f6f4f2", transition: `opacity ${TRANSICION}`, opacity: saliendo ? 0 : 1 }}
+      style={{ backgroundColor: "#a56c4d", transition: `opacity ${TRANSICION}`, opacity: saliendo ? 0 : 1 }}
       onClick={abrir}
       role="button"
       aria-label="Abrir invitación"
@@ -109,15 +114,15 @@ export default function IntroOverlay({ onAbrir, onDescargado, onTerminar }: Prop
           className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
           style={{ transition: `transform ${TRANSICION}`, transform: escala }}
         >
-          <p className="text-xs tracking-[0.3em] uppercase text-wedding-olive/70 mb-8">Estás invitado</p>
-          <div className="relative w-36 h-36 rounded-full bg-wedding-accent shadow-[inset_0_-6px_12px_rgba(0,0,0,0.18),0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center">
+          <p className="text-xs tracking-[0.3em] uppercase text-white/80 mb-8">Estás invitado</p>
+          <div className="relative w-36 h-36 rounded-full bg-boda-oxido shadow-[inset_0_-6px_12px_rgba(0,0,0,0.18),0_10px_25px_rgba(0,0,0,0.15)] flex items-center justify-center">
             <div className="absolute inset-2 rounded-full border border-white/40" />
-            <span className="font-script text-4xl text-white drop-shadow">{evento.novios.iniciales}</span>
+            <span className="font-script text-4xl text-white drop-shadow">{evento.novios.novia[0]}&amp;{evento.novios.novio[0]}</span>
           </div>
-          <h1 className="font-script text-5xl text-wedding-olive mt-10">
+          <h1 className="font-script text-5xl text-white mt-10">
             {evento.novios.novia} <span className="mx-1">&amp;</span> {evento.novios.novio}
           </h1>
-          <p className="text-xs tracking-[0.2em] uppercase text-wedding-olive/70 mt-4">{evento.fechaTexto}</p>
+          <p className="text-xs tracking-[0.2em] uppercase text-white/80 mt-4">{evento.fechaTexto}</p>
         </div>
       ) : (
         <>
@@ -154,9 +159,8 @@ export default function IntroOverlay({ onAbrir, onDescargado, onTerminar }: Prop
 
       {!tocado && (
         <p
-          className={`absolute bottom-10 left-0 right-0 text-center text-xs tracking-[0.3em] uppercase animate-pulse ${
-            videoFalla ? "text-wedding-olive/80" : "text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]"
-          }`}
+          className="absolute left-0 right-0 text-center text-xs tracking-[0.3em] uppercase animate-pulse text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]"
+          style={{ bottom: "calc(2.5rem + env(safe-area-inset-bottom, 0px))" }}
         >
           Toca para abrir
         </p>

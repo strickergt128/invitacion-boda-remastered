@@ -48,7 +48,7 @@ function mensajeConfirmacion(r: Respuesta, invitado?: Invitado): string {
 }
 
 const estiloCampo =
-  "flex h-11 w-full rounded-md border border-wedding-sage/50 bg-white px-3 py-2 text-base focus:outline-none focus:border-wedding-accent focus:ring-1 focus:ring-wedding-accent disabled:bg-wedding-paper disabled:text-wedding-text/80";
+  "flex h-11 w-full rounded-md border border-boda-arcilla/50 bg-white px-3 py-2 text-base focus:outline-none focus:border-boda-terracota focus:ring-1 focus:ring-boda-terracota disabled:bg-boda-arena/60 disabled:text-boda-texto/80";
 
 export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
   const { rsvp } = evento;
@@ -96,12 +96,12 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
   if (respuesta) {
     const si = respuesta.asiste;
     return (
-      <section id="rsvp" className="min-h-screen bg-wedding-cream flex items-center justify-center relative overflow-hidden">
+      <section id="rsvp" className="min-h-screen bg-boda-crema flex items-center justify-center relative overflow-hidden">
         <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 py-20">
-          <h2 className="font-script text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 text-center opacity-0 animate-[fade-in_0.8s_ease-out_0.2s_forwards]">
+          <h2 className="font-script text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 text-center opacity-0 animate-[fade-in_0.8s_var(--ease-out)_0.2s_forwards]">
             {si ? rsvp.graciasTitulo : rsvp.noAsistiraTitulo}
           </h2>
-          <div className="space-y-6 max-w-2xl text-center opacity-0 animate-[fade-in_0.8s_ease-out_0.5s_forwards]">
+          <div className="space-y-6 max-w-2xl text-center opacity-0 animate-[fade-in_0.8s_var(--ease-out)_0.5s_forwards]">
             <p className="text-foreground/90 text-lg md:text-xl leading-relaxed">
               {si ? rsvp.graciasDesc1 : rsvp.noAsistiraDesc1}
             </p>
@@ -110,15 +110,15 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
             </p>
             {si && (
               <p className="text-muted-foreground text-base md:text-lg">
-                Te esperamos el {evento.fechaTexto} en {evento.detalles.lugar}.
+                Te esperamos el {evento.fechaTexto} a las {evento.lugares[0].hora} en la {evento.lugares[0].nombre}.
               </p>
             )}
           </div>
-          <p className="text-muted-foreground font-script text-3xl md:text-4xl mt-10 opacity-0 animate-[fade-in_0.8s_ease-out_0.8s_forwards]">
+          <p className="text-muted-foreground font-script text-3xl md:text-4xl mt-10 opacity-0 animate-[fade-in_0.8s_var(--ease-out)_0.8s_forwards]">
             {evento.novios.novia} &amp; {evento.novios.novio}
           </p>
 
-          <div className="mt-12 flex flex-col items-center gap-6 opacity-0 animate-[fade-in_0.8s_ease-out_1.1s_forwards]">
+          <div className="mt-12 flex flex-col items-center gap-6 opacity-0 animate-[fade-in_0.8s_var(--ease-out)_1.1s_forwards]">
             {si && (
               <button
                 onClick={descargarCalendario}
@@ -134,7 +134,7 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
                 href={urlWhatsApp(rsvp.whatsappNovios, mensajeConfirmacion(respuesta, invitado))}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-wedding-accent underline underline-offset-4 hover:text-wedding-accent/80"
+                className="text-boda-terracota underline underline-offset-4 hover:text-boda-terracota/80"
               >
                 ¿No se abrió WhatsApp? Envía tu respuesta aquí
               </a>
@@ -152,18 +152,18 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
   }
 
   return (
-    <section id="rsvp" className="pt-20 pb-6 md:pt-32 md:pb-8 bg-wedding-cream">
+    <section id="rsvp" className="pt-20 pb-6 md:pt-32 md:pb-8 bg-boda-crema">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="text-center mb-12">
-          <p className="text-wedding-accent tracking-[0.3em] uppercase text-sm mb-4">{rsvp.subtitulo}</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-wedding-olive mb-6">{rsvp.titulo}</h2>
+          <p className="text-boda-terracota tracking-[0.3em] uppercase text-sm mb-4">{rsvp.subtitulo}</p>
+          <h2 className="font-script text-5xl md:text-6xl text-boda-cafe mb-6">{rsvp.titulo}</h2>
           <Ornamento className="mb-6" />
-          <p className="text-wedding-text/70">{rsvp.fechaLimite}</p>
+          <p className="text-boda-texto/70">{rsvp.descripcion}</p>
         </div>
 
         <form onSubmit={enviar} className="bg-white rounded-2xl p-8 md:p-12 shadow-lg space-y-6">
           <div className="space-y-2">
-            <label htmlFor="nombre" className="text-sm font-medium text-wedding-text">
+            <label htmlFor="nombre" className="text-sm font-medium text-boda-texto">
               Nombre completo *
             </label>
             <input
@@ -178,7 +178,7 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
           </div>
 
           <fieldset className="space-y-3">
-            <legend className="text-sm font-medium text-wedding-text mb-3">¿Nos acompañarás? *</legend>
+            <legend className="text-sm font-medium text-boda-texto mb-3">¿Nos acompañarás? *</legend>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
               {(
                 [
@@ -194,7 +194,7 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
                     required
                     checked={asistencia === valor}
                     onChange={() => setAsistencia(valor)}
-                    className="w-4 h-4 accent-[hsl(var(--wedding-accent))]"
+                    className="w-4 h-4 accent-[hsl(var(--boda-terracota))]"
                   />
                   {etiqueta}
                 </label>
@@ -204,7 +204,7 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
 
           {asistencia === "si" && (
             <div className="space-y-2 animate-fade-in">
-              <label htmlFor="personas" className="text-sm font-medium text-wedding-text">
+              <label htmlFor="personas" className="text-sm font-medium text-boda-texto">
                 {invitado ? "¿Cuántos pases utilizarán? *" : "¿Cuántas personas asistirán? *"}
               </label>
               <select
@@ -224,7 +224,7 @@ export default function Rsvp({ invitado, onCelebrar, celebrando }: Props) {
 
           <button
             type="submit"
-            className="w-full inline-flex items-center justify-center rounded-md bg-wedding-olive text-white h-12 px-4 text-sm tracking-[0.08em] uppercase hover:bg-wedding-olive/90 transition-colors"
+            className="w-full inline-flex items-center justify-center rounded-md presionable bg-boda-terracota text-white h-12 px-4 text-base font-medium hover:bg-boda-oxido"
           >
             <Send className="w-5 h-5 mr-2" />
             Confirmar por WhatsApp

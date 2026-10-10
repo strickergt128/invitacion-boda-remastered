@@ -1,80 +1,89 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { evento } from "../../data/evento";
 import { media } from "../../lib/media";
 
-export default function Hero({ cargarVideo }: { cargarVideo: boolean }) {
-  const [videoFalla, setVideoFalla] = useState(false);
-  const [videoListo, setVideoListo] = useState(false);
+type Props = {
+  /** El video espera a que el intro se descargue, para no competir por la red. */
+  cargarVideo: boolean;
+  /** Se vuelve true cuando el intro se cierra: entonces entra el texto. */
+  listo: boolean;
+};
 
-  const irARsvp = () => document.getElementById("rsvp")?.scrollIntoView({ behavior: "smooth" });
+export default function Hero({ cargarVideo, listo }: Props) {
+  const [videoListo, setVideoListo] = useState(false);
+  const [videoFalla, setVideoFalla] = useState(false);
+
+  const seccion = useRef<HTMLElement>(null);
+  const irASiguiente = () => seccion.current?.nextElementSibling?.scrollIntoView({ behavior: "smooth" });
+
+  // Poco texto: la foto es la protagonista. Entra escalonado al abrirse el sobre.
+  const entrada = `transition-[opacity,transform] duration-[900ms] ease-out-fuerte motion-reduce:transform-none ${
+    listo ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+  }`;
+  const retraso = (ms: number) => ({ transitionDelay: `${ms}ms` });
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center py-8 px-6 overflow-hidden bg-background">
-      <div className="absolute inset-0 w-full h-full">
-        {videoFalla ? (
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(var(--wedding-cream))_0%,_#f6f4f2_55%,_hsl(var(--wedding-paper))_100%)]" />
-        ) : (
-          <>
-            {/* Primer cuadro del video: se ve mientras el video carga */}
-            <img
-              src={media.heroPoster}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-              onError={(e) => (e.currentTarget.style.display = "none")}
-            />
-            {cargarVideo && (
-              <video
-                src={media.hero}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                onLoadedData={() => setVideoListo(true)}
-                onError={() => setVideoFalla(true)}
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ opacity: videoListo ? 1 : 0 }}
-              />
-            )}
-          </>
+    <section ref={seccion} className="relative min-h-[100svh] flex flex-col justify-between overflow-hidden bg-boda-cafe">
+      <div className="absolute inset-0">
+        {/* Foto fija mientras el video carga (es su primer cuadro).
+            La pareja está en la parte baja del encuadre vertical: en pantallas anchas se enfoca ahí. */}
+        <img
+          src={media.hero.poster}
+          alt="Mariana y Giovanni caminando en la playa al atardecer"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_80%]"
+          {...{ fetchpriority: "high" }}
+        />
+        {cargarVideo && !videoFalla && (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            onLoadedData={() => setVideoListo(true)}
+            onError={() => setVideoFalla(true)}
+            className="absolute inset-0 w-full h-full object-cover object-[50%_80%] transition-opacity duration-700 ease-out"
+            style={{ opacity: videoListo ? 1 : 0 }}
+          >
+            <source src={media.hero.webm} type="video/webm" />
+            <source src={media.hero.mp4} type="video/mp4" />
+          </video>
         )}
-        <div className="absolute inset-0 bg-background/20" />
+        {/* Degradado arriba para leer el texto sobre el cielo, y uno leve abajo para la flecha;
+            el centro queda limpio para la pareja */}
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
-      <div className="text-center z-10 animate-fade-in my-[230px]">
-        <p className="text-xs md:text-sm tracking-[0.3em] uppercase mb-3 text-wedding-olive">{evento.hero.titulo}</p>
-        <h1 className="font-script text-5xl md:text-6xl lg:text-7xl mb-2 text-wedding-olive">
-          {evento.novios.novia} <span className="mx-2">&amp;</span> {evento.novios.novio}
+      <div
+        className="relative z-10 text-center text-white px-6"
+        style={{ paddingTop: "calc(3.5rem + env(safe-area-inset-top, 0px))" }}
+      >
+        <p style={retraso(0)} className={`${entrada} text-[11px] tracking-[0.4em] uppercase text-white/80 mb-3`}>
+          Nos casamos
+        </p>
+        <h1 style={retraso(80)} className={`${entrada} font-script text-6xl md:text-7xl leading-tight drop-shadow-lg`}>
+          {evento.novios.novia} <span className="text-boda-arcilla">&amp;</span> {evento.novios.novio}
         </h1>
-        <div className="flex items-center justify-center gap-4 md:my-8 my-[5px]">
-          <span className="h-px w-12 md:w-20 bg-wedding-olive" />
-          <span className="text-amber-500 text-lg drop-shadow-md">✦</span>
-          <span className="h-px w-12 md:w-20 bg-wedding-olive" />
-        </div>
-        <p className="text-xs md:text-sm tracking-[0.2em] uppercase text-wedding-olive my-0 py-[6px]">
-          {evento.fechaTexto}
+        <p style={retraso(160)} className={`${entrada} mt-3 text-sm tracking-[0.35em] text-white/90`}>
+          {evento.fechaCorta}
         </p>
       </div>
 
-      <div className="flex-1" />
-
-      <div className="text-center z-10 animate-fade-in opacity-0" style={{ animationDelay: "0.4s" }}>
+      <div
+        className="relative z-10 text-center"
+        style={{ paddingBottom: "calc(2rem + env(safe-area-inset-bottom, 0px))" }}
+      >
         <button
-          onClick={irARsvp}
-          className="text-xs tracking-[0.3em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300"
+          onClick={irASiguiente}
+          aria-label="Ver la invitación"
+          style={retraso(320)}
+          className={`${entrada} inline-flex flex-col items-center text-white/80`}
         >
-          {evento.hero.confirmar}
-        </button>
-        <div className="mt-4 flex justify-center">
-          <svg
-            className="w-4 h-4 text-muted-foreground animate-bounce"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-5 h-5 animate-bounce motion-reduce:animate-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
-        </div>
+        </button>
       </div>
     </section>
   );

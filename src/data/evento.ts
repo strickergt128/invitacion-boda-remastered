@@ -1,113 +1,171 @@
 // ─────────────────────────────────────────────────────────────
 //  Toda la información del evento vive aquí.
-//  Reemplaza los placeholders cuando tengas los datos reales.
 // ─────────────────────────────────────────────────────────────
 
 export const evento = {
   novios: {
-    novia: "Nombre 1",
-    novio: "Nombre 2",
-    iniciales: "N & N",
+    novia: "Mariana",
+    novio: "Giovanni",
+    noviaCompleto: "Mariana Samayoa",
+    novioCompleto: "Giovanni Mazariegos",
   },
 
-  // Fecha y hora de inicio (hora local del evento) y duración para el calendario
-  fechaISO: "2027-06-12T16:00:00",
-  duracionHoras: 10,
-  fechaTexto: "12 de junio de 2027",
+  // Inicio de la ceremonia con la zona horaria de Guatemala (UTC-6),
+  // así la cuenta regresiva es correcta desde cualquier país.
+  fechaISO: "2026-12-26T16:30:00-06:00",
+  duracionHoras: 9.5,
+  fechaTexto: "26 de diciembre de 2026",
+  fechaCorta: "26 · 12 · 2026",
 
-  hero: {
-    titulo: "¡Nos casamos!",
-    confirmar: "Confirmar asistencia",
+  padres: {
+    titulo: "Con la bendición de Dios y nuestros padres:",
+    novia: [
+      { nombre: "Erick Estuardo Samayoa del Cid" },
+      { nombre: "Blanca Azucena Catalán Orellana" },
+    ],
+    novio: [
+      { nombre: "Willy Giovanni Mazariegos Martínez", fallecido: true },
+      { nombre: "Aleida Melissa Barrientos de Paz" },
+    ],
+    nosotros: "Nosotros",
+    invitacion: "Tenemos el honor de invitarte a nuestra boda.",
   },
 
-  historia: {
-    subtitulo: "Nuestro camino",
-    titulo: "Nuestra historia",
-    hitos: [
+  historia: [
+    {
+      titulo: "Mariana",
+      texto: [
+        "Hay momentos que se sueñan durante mucho tiempo y este es uno de ellos.",
+        "Hoy, con el corazón lleno de ilusión, me preparo para decir “sí” al amor de mi alma y comenzar juntos una nueva historia.",
+      ],
+      foto: "/media/pareja1.jpeg",
+      alt: "Mariana y Giovanni frente al mar",
+    },
+    {
+      titulo: "Giovanni",
+      texto: [
+        "Hoy quiero abrirles las puertas a un momento que significa el comienzo de una nueva etapa en mi vida.",
+        "Junto a la mujer de mis sueños, quiero celebrar el amor, la vida y la promesa de caminar juntos para siempre.",
+      ],
+      foto: "/media/pareja2.jpeg",
+      alt: "Mariana y Giovanni tomados de la mano",
+    },
+    {
+      titulo: "Nuestra historia",
+      texto: [
+        "Nos encontramos, nos elegimos y, entre momentos compartidos, descubrimos que nuestro lugar estaba juntos.",
+        "Hoy damos el siguiente paso para convertir nuestro amor en un para siempre.",
+      ],
+      foto: "/media/pareja6.jpeg",
+      alt: "Giovanni le pide matrimonio a Mariana en la playa",
+    },
+  ],
+
+  galeria: [
+    { src: "/media/pareja1.jpeg", alt: "Mariana y Giovanni frente al mar", ancho: 853, alto: 1280 },
+    { src: "/media/pareja4.jpeg", alt: "Manos entrelazadas con el anillo de compromiso", ancho: 1280, alto: 853 },
+    { src: "/media/pareja2.jpeg", alt: "Mariana y Giovanni frente con frente", ancho: 853, alto: 1280 },
+    { src: "/media/pareja3.jpeg", alt: "Mariana y Giovanni arrodillados en la arena", ancho: 1280, alto: 853 },
+    { src: "/media/pareja5.jpeg", alt: "Mariana y Giovanni de noche", ancho: 1280, alto: 853 },
+    { src: "/media/pareja6.jpeg", alt: "La propuesta de matrimonio", ancho: 1280, alto: 853 },
+  ],
+
+  // Íconos disponibles: ceremonia, recepcion, bienvenida, cena, fiesta, fin
+  itinerario: {
+    titulo: "Itinerario",
+    eventos: [
+      { hora: "16:30", titulo: "Ceremonia", descripcion: "Nuestro “sí, acepto”", icono: "ceremonia" },
       {
-        anio: "20XX",
-        titulo: "Cómo nos conocimos",
-        descripcion:
-          "Aquí va la historia de cómo se conocieron. Un par de líneas que cuenten ese primer encuentro inesperado.",
+        hora: "18:30",
+        titulo: "Recepción de invitados",
+        descripcion: "Les agradecemos llegar con puntualidad para disfrutar juntos de esta celebración.",
+        icono: "recepcion",
       },
-      {
-        anio: "20XX",
-        titulo: "Nuestra primera aventura",
-        descripcion:
-          "Un recuerdo especial juntos: un viaje, una cita, una anécdota que los acercó todavía más.",
-      },
-      {
-        anio: "20XX",
-        titulo: "Construyendo juntos",
-        descripcion:
-          "El momento en que supieron que era para siempre. Sueños compartidos y un futuro por delante.",
-      },
-      {
-        anio: "20XX",
-        titulo: "La propuesta",
-        descripcion:
-          "Con el corazón lleno de amor, llegó la gran pregunta… y la respuesta fue un sí entre lágrimas de alegría.",
-      },
+      { hora: "19:00", titulo: "Bienvenida", descripcion: "Entrada de los novios", icono: "bienvenida" },
+      { hora: "19:30", titulo: "Cena", descripcion: "Banquete", icono: "cena" },
+      { hora: "20:30", titulo: "Fiesta", descripcion: "¡A bailar!", icono: "fiesta" },
+      { hora: "00:00", titulo: "Fin de la velada", descripcion: "Despedida", icono: "fin" },
     ],
   },
 
-  // Íconos disponibles: llegada, ceremonia, coctel, cena, baile, fiesta, fin
-  programa: {
-    titulo: "Programa del día",
-    subtitulo: "Lo que hemos preparado para ti",
-    eventos: [
-      { hora: "16:30", titulo: "Llegada de invitados", descripcion: "Recepción y bienvenida", icono: "llegada" },
-      { hora: "17:00", titulo: "Ceremonia", descripcion: "Nuestro sí, acepto", icono: "ceremonia" },
-      { hora: "18:00", titulo: "Coctel", descripcion: "Bocadillos y bebidas", icono: "coctel" },
-      { hora: "20:00", titulo: "Cena", descripcion: "Banquete de bodas", icono: "cena" },
-      { hora: "22:30", titulo: "Primer baile", descripcion: "El baile de los novios", icono: "baile" },
-      { hora: "23:00", titulo: "Fiesta", descripcion: "¡A bailar!", icono: "fiesta" },
-      { hora: "02:30", titulo: "Despedida", descripcion: "Hasta pronto", icono: "fin" },
+  lugares: [
+    {
+      tipo: "Ceremonia Religiosa",
+      nombre: "Iglesia de Santo Domingo",
+      direccion: "12 avenida 10-09, zona 1",
+      ciudad: "Ciudad de Guatemala",
+      hora: "16:30 horas",
+      mapa: "https://maps.app.goo.gl/BCUDBJYeut3ii5Yo8",
+      video: "/media/iglesia.mp4",
+      poster: "/media/iglesia.jpg",
+      calendario: true,
+    },
+    {
+      tipo: "Recepción",
+      nombre: "Museo de la Merced",
+      direccion: "11 Avenida 4-49, Zona 1",
+      ciudad: "Ciudad de Guatemala",
+      hora: "18:30 horas",
+      mapa: "https://maps.app.goo.gl/zmAhXUnpZnZ1BWS8A",
+      video: "/media/museo.mp4",
+      poster: "/media/museo.jpg",
+      calendario: false,
+    },
+  ],
+
+  vestimenta: {
+    titulo: "Código de vestimenta",
+    tipo: "Formal elegante",
+    texto: [
+      "Con cariño, les pedimos reservar los tonos blanco y beige para la novia y terracota como color de nuestra celebración.",
+      "Fuera de estos tonos, serán bienvenidos todos los demás colores.",
+      "Gracias por acompañarnos y cuidar con nosotros cada detalle de este día tan especial. 🤍",
+    ],
+    reservados: [
+      { etiqueta: "Blanco", color: "#FFFFFF", nota: "Reservado para la novia" },
+      { etiqueta: "Beige", color: "#E8D9BF", nota: "Reservado para la novia" },
+      { etiqueta: "Terracota", color: "#B4532A", nota: "Color de nuestra celebración" },
+    ],
+    videos: [
+      {
+        titulo: "Ellas",
+        mp4: "/media/vestimenta/vestimenta-mujeres.mp4",
+        webm: "/media/vestimenta/vestimenta-mujeres.webm",
+        poster: "/media/vestimenta/vestimenta-mujeres-poster.jpg",
+        hd: "/media/vestimenta/vestimenta-mujeres-HD.jpg",
+        proporcion: 1920 / 674,
+      },
+      {
+        titulo: "Ellos",
+        mp4: "/media/vestimenta/vestimenta-hombres.mp4",
+        webm: "/media/vestimenta/vestimenta-hombres.webm",
+        poster: "/media/vestimenta/vestimenta-hombres-poster.jpg",
+        hd: "/media/vestimenta/vestimenta-hombres-HD.jpg",
+        proporcion: 1920 / 960,
+      },
     ],
   },
 
   regalos: {
     titulo: "Regalos",
-    descripcion: "Tu presencia es lo más importante para nosotros.",
-    descripcion2: "Si deseas hacernos un regalo, puedes hacerlo de la forma que te resulte más cómoda.",
-    contribucion: "Contribución",
-    opcionEfectivo: "Si lo prefieres, el regalo puede ser en efectivo el día del evento.",
-    opcionTransferencia: "Si te resulta más cómodo, también puedes hacer una transferencia:",
-    mostrarCuenta: "Mostrar datos bancarios",
-    banco: "Banco Placeholder",
-    titular: "Nombre del titular",
-    etiquetaCuenta: "CLABE",
-    cuenta: "000 000 0000 0000 0000",
-  },
-
-  detalles: {
-    subtitulo: "Acompáñanos",
-    titulo: "Detalles del evento",
-    descripcion:
-      "Estamos muy emocionados de celebrar este día tan especial contigo. Aquí está todo lo que necesitas saber.",
-    ceremonia: "Ceremonia y recepción",
-    ceremoniaDesc: "Acompáñanos a intercambiar nuestros votos rodeados de las personas que más queremos.",
-    hora: "4:00 PM",
-    lugar: "Nombre del lugar",
-    direccion: "Calle y número, Colonia",
-    ciudad: "Ciudad, Estado, País",
-    // Texto que se busca en Google Maps para el mapa embebido
-    mapaQuery: "Zócalo, Ciudad de México",
-    // Link directo para "Abrir en Maps" (puedes pegar uno de maps.app.goo.gl)
-    mapaLink: "https://maps.google.com/?q=Z%C3%B3calo,+Ciudad+de+M%C3%A9xico",
-    notaMapa: "Habrá estacionamiento disponible en el lugar.",
-    vestimenta: "Código de vestimenta",
-    vestimentaTipo: "Formal / Etiqueta opcional",
-    vestimentaDesc: "Te pedimos vestir de manera elegante para nuestra celebración.",
+    texto: [
+      "El mejor regalo para nosotros es contar con su presencia y compartir juntos este día tan especial. 🤍",
+      "Si desean hacernos un obsequio, hemos preparado nuestra lista de regalos en Bodas Cemaco, donde podrán encontrar algunas opciones que hemos elegido con mucho cariño para comenzar esta nueva etapa de nuestras vidas.",
+    ],
+    boton: "Ver lista de regalos en Cemaco",
+    link: "https://www.cemaco.com/list/MAZARIEGOSBARRIENTOSSAMAYOACATALAN26122026",
+    agradecimiento:
+      "Agradecemos de todo corazón su cariño, generosidad y, sobre todo, el regalo de acompañarnos en este día tan importante para nosotros.",
+    cierre: "¡Muchas gracias! ✨",
   },
 
   rsvp: {
-    subtitulo: "Sé nuestro invitado",
+    subtitulo: "Te esperamos",
     titulo: "Confirma tu asistencia",
-    fechaLimite: "Por favor confírmanos antes del 12 de mayo de 2027",
-    // Número de WhatsApp de los novios (con lada internacional, solo dígitos)
-    whatsappNovios: "520000000000",
-    // Máximo de personas cuando se abre la invitación genérica (sin link personal)
+    descripcion: "Tu respuesta nos ayuda a preparar cada detalle con mucho cariño.",
+    // Número de WhatsApp de los novios (con lada de Guatemala, solo dígitos)
+    whatsappNovios: "50242054232",
+    // Máximo de personas cuando se abre la invitación general (sin link personal)
     maxPersonasGenerico: 5,
     graciasTitulo: "¡Gracias por confirmar!",
     graciasDesc1: "Estamos muy felices de saber que nos acompañarás en este día tan especial.",
@@ -119,28 +177,12 @@ export const evento = {
       "Si por algún motivo cambian tus planes, te agradeceremos que nos avises con anticipación por WhatsApp.",
   },
 
-  viaje: {
-    subtitulo: "Planea tu visita",
-    titulo: "Viaje y hospedaje",
-    descripcion: "Queremos que tu visita sea lo más cómoda posible. Aquí tienes algunas recomendaciones.",
-    hoteles: [
-      { nombre: "Hotel Placeholder 1", categoria: "5 estrellas", distancia: "5 min del lugar", nota: "Tarifa especial para invitados" },
-      { nombre: "Hotel Placeholder 2", categoria: "4 estrellas", distancia: "10 min del lugar", nota: "Encantador e íntimo" },
-      { nombre: "Hotel Placeholder 3", categoria: "4 estrellas", distancia: "15 min del lugar", nota: "Ideal para recorrer la ciudad" },
-    ],
-    queHacerDesc: "Si extiendes tu estancia, estos son algunos lugares que nos encantan:",
-    atracciones: ["Centro histórico", "Mercados locales", "Restaurantes típicos", "Miradores y parques"],
-    preguntasDesc: "No dudes en escribirnos si necesitas ayuda para organizar tu viaje.",
-    contactoEmail: "boda@ejemplo.com",
-    contactoTelefono: "+52 000 000 0000",
-  },
-
-  hashtag: "#Nombre1YNombre2",
-
-  // Mensaje que se envía por WhatsApp desde el dashboard.
+  // Mensajes que se envían por WhatsApp desde el panel.
   // Variables disponibles: {nombre}, {pases}, {link}
   mensajeInvitacion:
-    "¡Hola {nombre}! 💌\n\nCon mucha ilusión queremos invitarte a nuestra boda. Hemos reservado {pases} para ti.\n\nAquí está tu invitación:\n{link}\n\n¡Esperamos contar contigo!",
+    "¡Hola {nombre}! 🤍\n\nCon mucha ilusión queremos invitarte a nuestra boda el 26 de diciembre de 2026. Hemos reservado {pases} en tu honor.\n\nAquí está tu invitación:\n{link}\n\nCon cariño,\nMariana & Giovanni",
+  mensajeInvitacionGeneral:
+    "¡Hola! 🤍\n\nCon mucha ilusión queremos invitarte a nuestra boda el 26 de diciembre de 2026.\n\nAquí está tu invitación:\n{link}\n\nCon cariño,\nMariana & Giovanni",
 };
 
 export type Evento = typeof evento;

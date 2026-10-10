@@ -1,67 +1,50 @@
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Gift } from "lucide-react";
 import { evento } from "../../data/evento";
 import { confetiRegalo } from "../../lib/confeti";
+import Revelar from "./Revelar";
 
 export default function Regalos() {
-  const [abierto, setAbierto] = useState(false);
-  const [mostrarCuenta, setMostrarCuenta] = useState(false);
   const { regalos } = evento;
 
-  const alternar = () => {
-    if (!abierto) confetiRegalo();
-    setAbierto(!abierto);
-  };
-
   return (
-    <section className="md:py-24 relative overflow-hidden py-[10px]" style={{ backgroundColor: "#FAF5EB" }}>
-      <div className="max-w-2xl mx-auto px-4 relative z-10 pb-10 md:pb-0">
-        <div className="text-center mb-12">
-          <h2 className="font-script text-5xl md:text-6xl text-wedding-olive mb-6 my-[20px]">{regalos.titulo}</h2>
-          <p className="text-muted-foreground leading-relaxed max-w-lg mx-auto">
-            {regalos.descripcion} <br className="hidden md:block" />
-            {regalos.descripcion2}
-          </p>
-        </div>
+    <section id="regalos" className="bg-boda-terracota text-white py-20 md:py-28 px-6 relative overflow-hidden">
+      <div className="absolute inset-3 md:inset-5 border border-white/20 rounded-sm pointer-events-none" />
 
-        <div className="rounded-2xl border-2 shadow-sm overflow-hidden bg-wedding-olive border-wedding-olive">
-          <button
-            onClick={alternar}
-            className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-wedding-sage/20 transition-colors"
-            aria-expanded={abierto}
+      <div className="relative max-w-xl mx-auto text-center">
+        <Revelar>
+          <span className="inline-flex w-14 h-14 rounded-full bg-white/10 border border-white/30 items-center justify-center mb-5">
+            <Gift className="w-6 h-6" strokeWidth={1.5} />
+          </span>
+        </Revelar>
+        <Revelar retraso={60}>
+          <h2 className="font-script text-5xl md:text-6xl mb-8">{regalos.titulo}</h2>
+        </Revelar>
+
+        {regalos.texto.map((p, i) => (
+          <Revelar key={i} retraso={120 + i * 60}>
+            <p className={`leading-relaxed mb-5 ${i === 0 ? "font-serif italic text-2xl" : "text-white/85"}`}>{p}</p>
+          </Revelar>
+        ))}
+
+        <Revelar retraso={240}>
+          <a
+            href={regalos.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={confetiRegalo}
+            className="presionable inline-flex items-center justify-center gap-2 h-12 px-7 my-4 rounded-full bg-white text-boda-oxido font-medium shadow-lg shadow-black/10 hover:bg-boda-crema"
           >
-            <span className="font-serif text-lg text-white">{regalos.contribucion}</span>
-            <ChevronDown
-              className="w-5 h-5 text-white/70 transition-transform duration-300"
-              style={{ transform: abierto ? "rotate(180deg)" : "rotate(0deg)" }}
-            />
-          </button>
-          <div
-            className={`overflow-hidden transition-all duration-300 ${abierto ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
-          >
-            <div className="px-6 pb-6 pt-4 bg-white">
-              <p className="text-muted-foreground text-sm leading-relaxed mb-2">{regalos.opcionEfectivo}</p>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-6">{regalos.opcionTransferencia}</p>
-              <div className="text-center">
-                {mostrarCuenta ? (
-                  <div className="space-y-1">
-                    <p className="text-sm text-foreground/80">{regalos.banco}</p>
-                    <p className="text-sm text-foreground/80">{regalos.titular}</p>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider pt-2">{regalos.etiquetaCuenta}</p>
-                    <p className="font-mono text-sm text-foreground/80 tracking-wide select-all">{regalos.cuenta}</p>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setMostrarCuenta(true)}
-                    className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground/60 transition-colors"
-                  >
-                    {regalos.mostrarCuenta}
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+            <Gift className="w-5 h-5" />
+            {regalos.boton}
+          </a>
+        </Revelar>
+
+        <Revelar retraso={300}>
+          <p className="text-white/80 leading-relaxed mt-6">{regalos.agradecimiento}</p>
+        </Revelar>
+        <Revelar retraso={360}>
+          <p className="font-script text-4xl mt-6">{regalos.cierre}</p>
+        </Revelar>
       </div>
     </section>
   );

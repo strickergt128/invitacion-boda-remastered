@@ -1,12 +1,14 @@
-// Coloca tus archivos en public/media/ con estos nombres.
+// Archivos en public/media/
 export const media = {
-  intro: "/media/intro.mp4",
-  // Primer cuadro de cada video: se muestra al instante mientras el video carga
-  introPoster: "/media/intro.jpg",
-  hero: "/media/hero.mp4",
-  heroPoster: "/media/hero.jpg",
+  intro: "/media/intro2.mp4",
+  // Primer cuadro del intro: se muestra al instante mientras el video se descarga
+  introPoster: "/media/intro2.jpg",
+  hero: {
+    webm: "/media/portada-boda.webm",
+    mp4: "/media/portada-boda.mp4",
+    poster: "/media/portada-boda-poster.jpg",
+  },
+  fondoCuentaRegresiva: "/media/pareja5.jpeg",
   celebracion: "/media/celebracion.mp4",
   musica: "/media/musica.mp3",
-  palomas: "/media/palomas.png",
-  divisor: "/media/divisor.png",
 };

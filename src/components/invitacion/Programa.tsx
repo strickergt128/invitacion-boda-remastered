@@ -1,91 +1,75 @@
-import { DoorOpen, Heart, Moon, Music, PartyPopper, UtensilsCrossed, Wine, type LucideIcon } from "lucide-react";
+import { Church, DoorOpen, Heart, Moon, Music, UtensilsCrossed, Wine, type LucideIcon } from "lucide-react";
 import { evento } from "../../data/evento";
-import { useAparecer } from "./useAparecer";
+import Revelar from "./Revelar";
 
 const iconos: Record<string, LucideIcon> = {
-  llegada: DoorOpen,
-  ceremonia: Heart,
-  coctel: Wine,
+  ceremonia: Church,
+  recepcion: DoorOpen,
+  bienvenida: Wine,
   cena: UtensilsCrossed,
-  baile: Music,
-  fiesta: PartyPopper,
+  fiesta: Music,
   fin: Moon,
 };
 
 export default function Programa() {
-  const { programa } = evento;
-  const columnas = programa.eventos.length;
-  const { ref, visible } = useAparecer<HTMLDivElement>(0.15);
-  const aparecer = (i: number) => ({
-    className: `transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`,
-    style: { transitionDelay: `${i * 100}ms` },
-  });
+  const { itinerario } = evento;
+  const columnas = itinerario.eventos.length;
 
   return (
-    <section className="md:py-24 bg-wedding-olive py-0">
-      <div className="max-w-5xl mx-auto px-4 py-[40px]">
-        <div className="text-center mb-16">
-          <h2 className="font-script text-5xl md:text-6xl text-wedding-gold mb-2">{programa.titulo}</h2>
-          <p className="text-white/70 tracking-wide">{programa.subtitulo}</p>
+    <section className="bg-boda-cafe text-white py-20 md:py-24 px-5">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-14">
+          <Revelar>
+            <p className="text-[11px] tracking-[0.4em] uppercase text-boda-arcilla mb-2">26 de diciembre</p>
+          </Revelar>
+          <Revelar retraso={60}>
+            <h2 className="font-script text-5xl md:text-6xl text-boda-arena">{itinerario.titulo}</h2>
+          </Revelar>
         </div>
 
-        <div ref={ref} className="relative">
-          {/* Escritorio: línea horizontal */}
-          <div className="hidden md:block">
-            <div className="absolute top-16 left-0 right-0 h-px bg-white/20" />
-            <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${columnas}, minmax(0, 1fr))` }}>
-              {programa.eventos.map((ev, i) => {
-                const Icono = iconos[ev.icono] ?? Heart;
-                return (
-                  <div
-                    key={i}
-                    className={`flex flex-col items-center text-center group ${aparecer(i).className}`}
-                    style={aparecer(i).style}
-                  >
-                    <div className="bg-wedding-gold text-wedding-olive px-3 py-1.5 rounded-full text-sm font-medium mb-4 group-hover:bg-wedding-accent transition-colors duration-300">
-                      {ev.hora}
-                    </div>
-                    <div className="w-14 h-14 rounded-full bg-wedding-olive border-2 border-white/30 flex items-center justify-center text-wedding-gold mb-4 shadow-sm group-hover:border-wedding-gold group-hover:scale-110 transition-all duration-300 z-10">
-                      <Icono className="w-5 h-5" />
-                    </div>
-                    <h3 className="font-serif text-base lg:text-lg text-white mb-1 leading-tight">{ev.titulo}</h3>
-                    <p className="text-white/60 text-xs leading-relaxed px-1">{ev.descripcion}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Móvil: línea vertical */}
-          <div className="md:hidden relative">
-            <div className="absolute left-6 top-0 bottom-0 w-px bg-white/20" />
-            <div className="space-y-6">
-              {programa.eventos.map((ev, i) => {
-                const Icono = iconos[ev.icono] ?? Heart;
-                return (
-                  <div
-                    key={i}
-                    className={`flex items-start gap-4 pl-1 ${aparecer(i).className}`}
-                    style={aparecer(i).style}
-                  >
-                    <div className="w-11 h-11 rounded-full bg-wedding-olive border-2 border-white/30 flex items-center justify-center text-wedding-gold flex-shrink-0 shadow-sm z-10">
-                      <Icono className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 pt-1">
-                      <div className="flex items-baseline gap-3 mb-0.5">
-                        <span className="bg-wedding-gold text-wedding-olive px-2 py-0.5 rounded text-xs font-medium">
-                          {ev.hora}
-                        </span>
-                        <h3 className="font-serif text-lg text-white">{ev.titulo}</h3>
-                      </div>
-                      <p className="text-white/60 text-sm">{ev.descripcion}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        {/* Escritorio: línea horizontal */}
+        <div className="hidden md:block relative">
+          <div className="absolute top-[4.25rem] left-0 right-0 h-px bg-white/20" />
+          <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${columnas}, minmax(0, 1fr))` }}>
+            {itinerario.eventos.map((ev, i) => {
+              const Icono = iconos[ev.icono] ?? Heart;
+              return (
+                <Revelar key={ev.hora} retraso={i * 60} className="flex flex-col items-center text-center">
+                  <span className="bg-boda-terracota text-white px-3 py-1 rounded-full text-sm font-medium tabular-nums mb-4">
+                    {ev.hora}
+                  </span>
+                  <span className="relative z-10 w-14 h-14 rounded-full bg-boda-cafe border border-boda-arcilla/60 flex items-center justify-center text-boda-arcilla mb-4">
+                    <Icono className="w-5 h-5" strokeWidth={1.5} />
+                  </span>
+                  <h3 className="font-serif text-lg leading-tight mb-1">{ev.titulo}</h3>
+                  <p className="text-white/60 text-xs leading-relaxed px-1">{ev.descripcion}</p>
+                </Revelar>
+              );
+            })}
           </div>
         </div>
+
+        {/* Celular: línea vertical */}
+        <ol className="md:hidden relative space-y-7">
+          <span className="absolute left-[1.375rem] top-2 bottom-2 w-px bg-white/20" aria-hidden="true" />
+          {itinerario.eventos.map((ev, i) => {
+            const Icono = iconos[ev.icono] ?? Heart;
+            return (
+              <Revelar key={ev.hora} como="li" retraso={i * 60} className="relative flex items-start gap-4">
+                <span className="relative z-10 w-11 h-11 shrink-0 rounded-full bg-boda-cafe border border-boda-arcilla/60 flex items-center justify-center text-boda-arcilla">
+                  <Icono className="w-5 h-5" strokeWidth={1.5} />
+                </span>
+                <div className="pt-1">
+                  <div className="flex items-baseline gap-3 mb-1">
+                    <span className="bg-boda-terracota text-white px-2 py-0.5 rounded text-xs font-medium tabular-nums">{ev.hora}</span>
+                    <h3 className="font-serif text-xl leading-tight">{ev.titulo}</h3>
+                  </div>
+                  <p className="text-white/60 text-sm leading-relaxed">{ev.descripcion}</p>
+                </div>
+              </Revelar>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

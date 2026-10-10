@@ -1,39 +1,31 @@
 import type { Invitado } from "../../lib/invitados";
-import { useAparecer } from "./useAparecer";
+import Revelar from "./Revelar";
 
 export default function PaseInvitado({ invitado }: { invitado: Invitado }) {
-  const { ref, visible } = useAparecer<HTMLDivElement>();
   const plural = invitado.pases !== 1;
 
   return (
-    <section className="bg-wedding-cream py-16 md:py-24 px-6">
-      <div
-        ref={ref}
-        className={`max-w-md mx-auto text-center transition-all duration-1000 ease-out ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-      >
-        <p className="text-wedding-accent tracking-[0.3em] uppercase text-xs md:text-sm mb-4">Con mucho cariño para</p>
-        <h2 className="font-script text-5xl md:text-6xl text-wedding-olive mb-6 leading-tight">{invitado.nombre}</h2>
+    <section className="bg-boda-terracota text-white py-16 md:py-20 px-6 relative overflow-hidden">
+      {/* Marco fino tipo tarjeta */}
+      <div className="absolute inset-3 md:inset-5 border border-white/25 rounded-sm pointer-events-none" />
 
-        <div className="flex items-center justify-center gap-4 mb-8">
-          <span className="h-px w-12 md:w-20 bg-wedding-olive/40" />
-          <span className="text-amber-500 text-lg">✦</span>
-          <span className="h-px w-12 md:w-20 bg-wedding-olive/40" />
-        </div>
+      <div className="relative max-w-md mx-auto text-center">
+        <Revelar>
+          <p className="tracking-[0.3em] uppercase text-[11px] text-white/75 mb-4">Con mucho cariño para</p>
+        </Revelar>
+        <Revelar retraso={60}>
+          <h2 className="font-script text-5xl md:text-6xl leading-tight mb-6">{invitado.nombre}</h2>
+        </Revelar>
+        <Revelar retraso={120}>
+          <p className="font-serif italic text-xl text-white/85 mb-6">Hemos reservado en su honor</p>
+        </Revelar>
 
-        <p className="font-serif italic text-xl text-wedding-text/70 mb-6">Hemos reservado en su honor</p>
-
-        <div className="inline-flex flex-col items-center justify-center w-36 h-36 rounded-full border border-wedding-accent/40 bg-white/60 shadow-sm">
-          <span className="font-serif text-6xl text-wedding-olive leading-none">{invitado.pases}</span>
-          <span className="text-xs tracking-[0.3em] uppercase text-wedding-accent mt-2">{plural ? "Pases" : "Pase"}</span>
-        </div>
-
-        <p className="text-wedding-text/60 text-sm mt-8 leading-relaxed">
-          {plural
-            ? "Nos encantaría compartir este día con ustedes. Por favor confirma cuántos pases utilizarán."
-            : "Nos encantaría compartir este día contigo. Por favor confirma tu asistencia."}
-        </p>
+        <Revelar retraso={180} className="inline-block">
+          <div className="inline-flex flex-col items-center justify-center w-36 h-36 rounded-full bg-white/10 border border-white/40 backdrop-blur-sm">
+            <span className="font-serif text-6xl leading-none tabular-nums">{invitado.pases}</span>
+            <span className="text-[11px] tracking-[0.3em] uppercase text-white/80 mt-2">{plural ? "Pases" : "Pase"}</span>
+          </div>
+        </Revelar>
       </div>
     </section>
   );

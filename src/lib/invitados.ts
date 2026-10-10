@@ -1,14 +1,17 @@
 import lista from "../data/invitados.json";
 import { evento } from "../data/evento";
 
+export type Lado = "giovanni" | "mariana";
+
 export type Invitado = {
   id: string;
   nombre: string;
   pases: number;
+  lado: Lado;
   telefono?: string;
 };
 
-export const invitados: Invitado[] = lista;
+export const invitados = lista as Invitado[];
 
 export function buscarInvitado(id: string | undefined): Invitado | undefined {
   if (!id) return undefined;
@@ -17,6 +20,11 @@ export function buscarInvitado(id: string | undefined): Invitado | undefined {
 
 export function linkInvitado(invitado: Invitado): string {
   return `${window.location.origin}/i/${encodeURIComponent(invitado.id)}`;
+}
+
+/** Invitación general: sin nombre ni pases, para quien se haya quedado sin la suya. */
+export function linkGeneral(): string {
+  return `${window.location.origin}/`;
 }
 
 export function textoPases(pases: number): string {
@@ -46,4 +54,8 @@ export function mensajeInvitacion(invitado: Invitado): string {
     .replace(/\{nombre\}/g, invitado.nombre)
     .replace(/\{pases\}/g, textoPases(invitado.pases))
     .replace(/\{link\}/g, linkInvitado(invitado));
+}
+
+export function mensajeInvitacionGeneral(): string {
+  return evento.mensajeInvitacionGeneral.replace(/\{link\}/g, linkGeneral());
 }

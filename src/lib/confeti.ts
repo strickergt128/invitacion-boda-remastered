@@ -15,20 +15,25 @@ function cuandoSeaVisible(fn: () => void) {
   document.addEventListener("visibilitychange", alVolver);
 }
 
-/** Ráfaga al abrir "Contribución" en Regalos (igual que la referencia). */
+// Paleta terracota de la boda
+const COLORES = ["#B4532A", "#8C3B22", "#C98552", "#EFE2D0", "#FFFBF5"];
+
+// Movimiento reducido: el confeti es pura decoración, se omite
+const reducirMovimiento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Ráfaga al abrir la lista de regalos (se abre en otra pestaña: espera a que el invitado regrese). */
 export function confetiRegalo() {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: ["#e57373", "#f4a460", "#64b5f6", "#ffd54f", "#81c784", "#ba68c8"],
+  if (reducirMovimiento()) return;
+  cuandoSeaVisible(() => {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: COLORES });
   });
 }
 
 /** Lluvia desde ambos lados al confirmar asistencia. */
 export function confetiCelebracion() {
+  if (reducirMovimiento()) return;
   cuandoSeaVisible(() => {
-    const colores = ["#d4955a", "#ecc9a2", "#4c5c2f", "#adcbb5", "#ffffff"];
+    const colores = COLORES;
 
     confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 }, colors: colores });
 

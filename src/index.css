@@ -4,29 +4,132 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 20 14% 15%;
-    --muted: 30 30% 96%;
-    --muted-foreground: 20 14% 40%;
-    --primary: 27 58% 59%;
-    --primary-foreground: 0 0% 100%;
-    --border: 30 20% 90%;
+    /* Paleta terracota */
+    --boda-terracota: 19 62% 44%; /* #B4532A */
+    --boda-oxido: 14 61% 34%; /* #8C3B22 */
+    --boda-arcilla: 26 51% 56%; /* #C98552 */
+    --boda-cafe: 11 50% 19%; /* #4A2219 */
+    --boda-crema: 36 55% 94%; /* #F8F1E7 */
+    --boda-arena: 34 48% 88%; /* #EFE2D0 */
+    --boda-marfil: 36 100% 98%; /* #FFFBF5 */
+    --boda-texto: 14 35% 20%;
 
-    --wedding-cream: 47 55% 95%;
-    --wedding-paper: 30 27% 96%;
-    --wedding-blush: 350 60% 92%;
-    --wedding-sage: 140 20% 75%;
-    --wedding-accent: 27 58% 59%;
-    --wedding-text: 20 14% 15%;
-    --wedding-olive: 90 24% 24%;
-    --wedding-gold: 30 58% 77%;
+    --background: var(--boda-marfil);
+    --foreground: var(--boda-texto);
+    --muted: var(--boda-arena);
+    --muted-foreground: 16 18% 40%;
+    --primary: var(--boda-terracota);
+    --primary-foreground: 0 0% 100%;
+    --border: 30 30% 85%;
+
+    /* Curvas de movimiento (skill "animate") */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   }
 
   html {
     scroll-behavior: smooth;
+    /* Sin destello gris al tocar ni texto inflado en horizontal */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Controles: respuesta inmediata al tocar y sin selección de texto al mantener presionado */
+  button,
+  a,
+  [role="button"],
+  summary {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* iOS hace zoom en campos de menos de 16px */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Retroalimentación al presionar (skill "emil-design-eng") */
+  .presionable {
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
+  }
+  .presionable:active {
+    transform: scale(0.97);
+  }
+
+  /* Revelado al hacer scroll: se activa con data-visible */
+  .revelar {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 600ms var(--ease-out),
+      transform 600ms var(--ease-out);
+  }
+  .revelar[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Fotos: se descubren de abajo hacia arriba mientras la imagen se asienta */
+  .revelar-imagen {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 900ms var(--ease-in-out);
+  }
+  .revelar-imagen > img,
+  .revelar-imagen > video {
+    transform: scale(1.06);
+    transition: transform 1400ms var(--ease-out);
+  }
+  [data-visible="true"] > .revelar-imagen {
+    clip-path: inset(0 0 0 0);
+  }
+  [data-visible="true"] > .revelar-imagen > img,
+  [data-visible="true"] > .revelar-imagen > video {
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Menos movimiento, no cero: se conservan los fundidos */
+    .revelar {
+      transform: none;
+    }
+    .revelar-imagen {
+      clip-path: none;
+      opacity: 0;
+      transition: opacity 600ms ease;
+    }
+    [data-visible="true"] > .revelar-imagen {
+      opacity: 1;
+    }
+    .revelar-imagen > img,
+    .revelar-imagen > video {
+      transform: none;
+    }
+  }
+
+  /* Carruseles horizontales sin barra visible */
+  .sin-barra {
+    scrollbar-width: none;
+  }
+  .sin-barra::-webkit-scrollbar {
+    display: none;
   }
 }
