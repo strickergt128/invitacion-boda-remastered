@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { evento } from "../data/evento";
 import { buscarInvitado } from "../lib/invitados";
-import { media } from "../lib/media";
+import { media, videosDecorativos } from "../lib/media";
+import { desbloquearVideos } from "../lib/video";
 import IntroOverlay from "../components/invitacion/IntroOverlay";
 import Hero from "../components/invitacion/Hero";
 import PaseInvitado from "../components/invitacion/PaseInvitado";
@@ -32,6 +33,19 @@ export default function Invitacion() {
   const [silenciado, setSilenciado] = useState(true);
   const [hayMusica, setHayMusica] = useState(true);
   const [celebrando, setCelebrando] = useState(false);
+
+  // iPhone en bajo consumo solo reproduce videos que se "desbloquearon" durante un toque.
+  // Cada toque (empezando por el del sobre) desbloquea los videos decorativos que falten,
+  // aunque todavía no estén en pantalla; así luego corren solos al hacer scroll.
+  useEffect(() => {
+    const desbloquear = () => desbloquearVideos(videosDecorativos);
+    document.addEventListener("click", desbloquear, true);
+    document.addEventListener("touchend", desbloquear, true);
+    return () => {
+      document.removeEventListener("click", desbloquear, true);
+      document.removeEventListener("touchend", desbloquear, true);
+    };
+  }, []);
 
   useEffect(() => {
     const novios = `${evento.novios.novia} & ${evento.novios.novio}`;

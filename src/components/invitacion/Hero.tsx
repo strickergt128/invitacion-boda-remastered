@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { evento } from "../../data/evento";
-import { media } from "../../lib/media";
-import { prepararVideoSilencioso } from "../../lib/video";
+import { fuentesVideo, media } from "../../lib/media";
+import VideoDesbloqueado from "./VideoDesbloqueado";
 
 type Props = {
   /** El video espera a que el intro se descargue, para no competir por la red. */
@@ -32,27 +32,17 @@ export default function Hero({ cargarVideo, listo }: Props) {
           src={media.hero.poster}
           alt="Mariana y Giovanni caminando en la playa al atardecer"
           className="absolute inset-0 w-full h-full object-cover object-[50%_80%]"
-          {...{ fetchpriority: "high" }}
         />
         {cargarVideo && !videoFalla && (
-          <video
-            ref={prepararVideoSilencioso}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            // Por si iPhone no arrancó el autoplay; si lo bloquea (bajo consumo) se queda la foto
-            onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
-            // Se muestra cuando de verdad corre: un video pausado sin cuadro decodificado se ve negro en iOS
+          // Video ya desbloqueado con el toque del sobre: corre también en iPhone con bajo consumo
+          <VideoDesbloqueado
+            fuentes={fuentesVideo.hero}
+            reproducir
+            visible={videoListo}
             onPlaying={() => setVideoListo(true)}
             onError={() => setVideoFalla(true)}
             className="absolute inset-0 w-full h-full object-cover object-[50%_80%] transition-opacity duration-700 ease-out"
-            style={{ opacity: videoListo ? 1 : 0 }}
-          >
-            <source src={media.hero.webm} type="video/webm" />
-            <source src={media.hero.mp4} type="video/mp4" />
-          </video>
+          />
         )}
         {/* Degradado arriba para leer el texto sobre el cielo, y uno leve abajo para la flecha;
             el centro queda limpio para la pareja */}

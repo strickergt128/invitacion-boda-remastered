@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Expand } from "lucide-react";
 import { evento } from "../../data/evento";
+import { fuentesVideo } from "../../lib/media";
 import Lightbox from "./Lightbox";
 import Revelar from "./Revelar";
 import VideoPerezoso from "./VideoPerezoso";
@@ -37,10 +38,7 @@ function Franja({ video, onAmpliar }: { video: Video; onAmpliar: () => void }) {
           style={{ aspectRatio: String(video.proporcion) }}
         >
           <VideoPerezoso
-            fuentes={[
-              { src: video.webm, tipo: "video/webm" },
-              { src: video.mp4, tipo: "video/mp4" },
-            ]}
+            fuentes={fuentesVideo.vestimenta(video)}
             poster={video.poster}
             alt={`Ejemplos de vestimenta: ${video.titulo.toLowerCase()}`}
             className="absolute inset-0"

@@ -1,6 +1,7 @@
 import { CalendarPlus, Clock, MapPin } from "lucide-react";
 import { evento } from "../../data/evento";
 import { descargarCalendario } from "../../lib/calendario";
+import { fuentesVideo } from "../../lib/media";
 import Revelar from "./Revelar";
 import VideoPerezoso from "./VideoPerezoso";
 
@@ -25,7 +26,7 @@ export default function Lugares() {
             <article className="bg-boda-marfil rounded-2xl overflow-hidden shadow-xl shadow-boda-cafe/10 h-full flex flex-col">
               <Revelar variante="imagen" className="relative aspect-video overflow-hidden">
                 <VideoPerezoso
-                  fuentes={[{ src: lugar.video, tipo: "video/mp4" }]}
+                  fuentes={fuentesVideo.lugar(lugar)}
                   poster={lugar.poster}
                   alt={lugar.nombre}
                   className="absolute inset-0"

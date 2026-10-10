@@ -12,6 +12,22 @@
         position: fixed;
         inset: 0;
         background: #a56c4d url(/media/intro2.jpg) center / cover no-repeat;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Mismo aviso que el sobre interactivo, para que el cambio a React no se note */
+      #pantalla-inicial p {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+        margin: 0;
+        text-align: center;
+        color: #fff;
+        font: 500 12px/1.5 Montserrat, system-ui, sans-serif;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
       }
     </style>
     <title>Mariana &amp; Giovanni · 26 de diciembre de 2026</title>
@@ -51,11 +67,20 @@
   <body>
     <div id="root">
       <!-- El sobre estático mientras carga el JS. React lo reemplaza al montar el intro, que muestra la misma imagen. -->
-      <div id="pantalla-inicial"></div>
+      <div id="pantalla-inicial"><p>Toca para abrir</p></div>
     </div>
     <script>
-      // En el panel no se muestra el sobre
-      if (location.pathname.indexOf("/panel-") === 0) document.getElementById("pantalla-inicial").remove();
+      (function () {
+        var sobre = document.getElementById("pantalla-inicial");
+        // En el panel no se muestra el sobre
+        if (location.pathname.indexOf("/panel-") === 0) return sobre.remove();
+        // Con red lenta el invitado puede tocar el sobre antes de que cargue la página:
+        // se recuerda el toque (el intro lo retoma al montar) y se avisa que ya se está abriendo
+        sobre.addEventListener("click", function () {
+          window.__sobreTocado = true;
+          sobre.querySelector("p").textContent = "Abriendo tu invitación…";
+        }, { once: true });
+      })();
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

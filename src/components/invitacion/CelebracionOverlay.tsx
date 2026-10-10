@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { media } from "../../lib/media";
-import { prepararVideoSilencioso } from "../../lib/video";
+import { fuentesVideo } from "../../lib/media";
+import VideoDesbloqueado from "./VideoDesbloqueado";
 
 type Fase = "video" | "destello" | "salida";
 
 /** Video de celebración a pantalla completa → destello blanco → desvanecido. */
 export default function CelebracionOverlay({ onTerminar }: { onTerminar: () => void }) {
   const [fase, setFase] = useState<Fase>("video");
+  const [corriendo, setCorriendo] = useState(false);
   const terminado = useRef(false);
 
   const cerrar = () => {
@@ -31,20 +32,20 @@ export default function CelebracionOverlay({ onTerminar }: { onTerminar: () => v
         transition: fase === "salida" ? "opacity 600ms ease-in-out" : undefined,
       }}
     >
-      <video
-        ref={prepararVideoSilencioso}
-        src={media.celebracion}
-        className="w-full h-full object-cover bg-white"
-        playsInline
-        autoPlay
-        muted
-        preload="auto"
-        onTimeUpdate={(e) => {
-          const v = e.currentTarget;
+      <div className="absolute inset-0 bg-white" />
+      <VideoDesbloqueado
+        fuentes={fuentesVideo.celebracion}
+        loop={false}
+        reproducir
+        visible={corriendo}
+        className="absolute inset-0 w-full h-full object-cover"
+        onPlaying={() => setCorriendo(true)}
+        onTimeUpdate={(v) => {
           if (v.duration && v.duration - v.currentTime < 0.5) cerrar();
         }}
         onEnded={cerrar}
         onError={() => {
+          if (terminado.current) return;
           terminado.current = true;
           onTerminar();
         }}
