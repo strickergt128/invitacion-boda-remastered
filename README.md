@@ -68,6 +68,14 @@ Los videos para celular no necesitan 4K ni audio. Así se comprimen (los origina
 ffmpeg -i original.mp4 -vf "scale=960:-2" -c:v libx264 -preset slow -crf 28 -pix_fmt yuv420p -movflags +faststart -an public/media/iglesia.mp4
 ```
 
+## Vista previa al compartir por WhatsApp
+
+Al pegar un link de la invitación, WhatsApp muestra `public/og-invitacion.jpg` (1200×630, ~85 KB) con el título y la descripción definidos en `index.html`.
+
+- WhatsApp lee la vista previa desde sus servidores sin ejecutar JavaScript, así que la imagen usa la URL completa de `VITE_SITE_URL` en `.env`. **Si cambias de dominio, actualiza esa variable** y vuelve a publicar.
+- La imagen debe seguir siendo horizontal y pesar menos de ~300 KB, o WhatsApp puede no mostrarla.
+- WhatsApp guarda en caché la vista previa de cada link. Si un link ya se compartió antes del cambio, puede seguir mostrando la versión vieja por un tiempo.
+
 ## Publicar
 
 ```bash
