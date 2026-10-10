@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { media } from "../../lib/media";
+import { prepararVideoSilencioso } from "../../lib/video";
 
 type Fase = "video" | "destello" | "salida";
 
@@ -31,6 +32,7 @@ export default function CelebracionOverlay({ onTerminar }: { onTerminar: () => v
       }}
     >
       <video
+        ref={prepararVideoSilencioso}
         src={media.celebracion}
         className="w-full h-full object-cover bg-white"
         playsInline

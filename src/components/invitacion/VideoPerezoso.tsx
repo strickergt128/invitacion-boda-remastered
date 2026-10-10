@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { prepararVideoSilencioso } from "../../lib/video";
 import { useAparecer } from "./useAparecer";
 
 type Props = {
@@ -17,7 +18,7 @@ type Props = {
  */
 export default function VideoPerezoso({ fuentes, poster, alt, className = "relative" }: Props) {
   const cerca = useAparecer<HTMLDivElement>(0, "600px");
-  const video = useRef<HTMLVideoElement>(null);
+  const video = useRef<HTMLVideoElement | null>(null);
   const [listo, setListo] = useState(false);
 
   useEffect(() => {
@@ -36,12 +37,16 @@ export default function VideoPerezoso({ fuentes, poster, alt, className = "relat
       <img src={poster} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
       {cerca.visible && (
         <video
-          ref={video}
+          ref={(el) => {
+            video.current = el;
+            prepararVideoSilencioso(el);
+          }}
           muted
           loop
           playsInline
           preload="auto"
-          onLoadedData={() => setListo(true)}
+          // Se muestra cuando de verdad corre: un video pausado sin cuadro decodificado se ve negro en iOS
+          onPlaying={() => setListo(true)}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-out"
           style={{ opacity: listo ? 1 : 0 }}
         >

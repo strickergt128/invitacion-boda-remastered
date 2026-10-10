@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { evento } from "../../data/evento";
 import { media } from "../../lib/media";
+import { prepararVideoSilencioso } from "../../lib/video";
 
 type Props = {
   /** Se llama en el primer toque (sirve para arrancar la música). */
@@ -16,17 +17,19 @@ type Props = {
 // Salida tipo telón: se abre mostrando la portada (curva fuerte de la skill "animate")
 const DURACION_SALIDA_MS = 1200;
 const TRANSICION = `${DURACION_SALIDA_MS}ms var(--ease-out)`;
-// Si tras tocar el video todavía no termina de descargarse en este tiempo, abrimos la invitación
+// Si tras tocar el video no arranca en este tiempo, abrimos la invitación de todos modos
 const ESPERA_MAXIMA_MS = 8000;
 
 export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTerminar }: Props) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const iniciado = useRef(false);
   const cerrado = useRef(false);
   const espera = useRef<ReturnType<typeof setTimeout>>();
-  // El video se descarga completo antes de reproducirlo, para que no se trabe en redes lentas
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [videoListo, setVideoListo] = useState(false);
+  // El video se descarga completo de antemano (blob) para que no se trabe en redes lentas.
+  // El src se asigna a mano, no con estado de React, para que nunca cambie a media reproducción.
+  const descarga = useRef<AbortController>();
+  const blobUrl = useRef<string | null>(null);
+  const [videoVisible, setVideoVisible] = useState(false);
   const [videoFalla, setVideoFalla] = useState(false);
   const [tocado, setTocado] = useState(false);
   const [saliendo, setSaliendo] = useState(false);
@@ -40,15 +43,6 @@ export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTermina
     setTimeout(onTerminar, DURACION_SALIDA_MS);
   };
 
-  const reproducir = () => {
-    const video = videoRef.current;
-    if (!video) return salir();
-    clearTimeout(espera.current);
-    // Margen por si la reproducción se queda trabada
-    espera.current = setTimeout(salir, ((video.duration || 5) + 3) * 1000);
-    video.play().catch(salir);
-  };
-
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -59,7 +53,7 @@ export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTermina
 
   useEffect(() => {
     const control = new AbortController();
-    let url: string | null = null;
+    descarga.current = control;
 
     // Prioridad alta: es lo primero que ve el invitado
     fetch(media.intro, { signal: control.signal, priority: "high" } as RequestInit)
@@ -69,8 +63,11 @@ export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTermina
         return r.blob();
       })
       .then((blob) => {
-        url = URL.createObjectURL(blob);
-        setVideoUrl(url);
+        const video = videoRef.current;
+        // Si ya se tocó, el video está corriendo desde la URL directa: no se toca
+        if (!video || iniciado.current) return;
+        blobUrl.current = URL.createObjectURL(blob);
+        video.src = blobUrl.current;
         onDescargado?.();
       })
       .catch(() => {
@@ -82,7 +79,8 @@ export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTermina
 
     return () => {
       control.abort();
-      if (url) URL.revokeObjectURL(url);
+      if (blobUrl.current) URL.revokeObjectURL(blobUrl.current);
+      blobUrl.current = null;
     };
   }, []);
 
@@ -92,10 +90,19 @@ export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTermina
     setTocado(true);
     onAbrir();
 
-    if (videoFalla) return salir();
-    if (videoListo) return reproducir();
-    // Aún descargando: se reproduce en cuanto esté listo (ver onLoadedData)
+    const video = videoRef.current;
+    if (videoFalla || !video) return salir();
+
+    // Si la descarga no terminó, se reproduce en streaming desde la URL directa
+    if (!blobUrl.current) {
+      descarga.current?.abort();
+      video.src = media.intro;
+    }
+
+    // play() tiene que llamarse aquí, dentro del toque: iPhone no carga datos del video
+    // hasta que alguien lo pide, y en modo de bajo consumo bloquea play() fuera de un gesto.
     espera.current = setTimeout(salir, ESPERA_MAXIMA_MS);
+    video.play().catch(salir);
   };
 
   const escala = saliendo ? "scale(1.05)" : "scale(1)";
@@ -134,26 +141,30 @@ export default function IntroOverlay({ onAbrir, onDescargado, onSalir, onTermina
             style={{ transition: `transform ${TRANSICION}`, transform: escala }}
             onError={(e) => (e.currentTarget.style.display = "none")}
           />
-          {videoUrl && (
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ transition: `transform ${TRANSICION}`, transform: escala, opacity: videoListo ? 1 : 0 }}
-              playsInline
-              muted
-              preload="auto"
-              onLoadedData={() => {
-                setVideoListo(true);
-                if (iniciado.current && !cerrado.current) reproducir();
-              }}
-              onError={() => {
-                setVideoFalla(true);
-                if (iniciado.current) salir();
-              }}
-              onEnded={salir}
-            />
-          )}
+          {/* Siempre presente (el src llega después), para poder llamar play() en el mismo toque */}
+          <video
+            ref={(el) => {
+              videoRef.current = el;
+              prepararVideoSilencioso(el);
+            }}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ transition: `transform ${TRANSICION}`, transform: escala, opacity: videoVisible ? 1 : 0 }}
+            playsInline
+            muted
+            preload="auto"
+            onPlaying={(e) => {
+              // Se muestra cuando de verdad corre; debajo está el poster, que es su mismo primer cuadro
+              setVideoVisible(true);
+              clearTimeout(espera.current);
+              const restante = (e.currentTarget.duration || 5) - e.currentTarget.currentTime;
+              espera.current = setTimeout(salir, (restante + 3) * 1000);
+            }}
+            onError={() => {
+              if (iniciado.current) salir();
+              else setVideoFalla(true);
+            }}
+            onEnded={salir}
+          />
         </>
       )}
 

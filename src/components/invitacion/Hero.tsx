@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { evento } from "../../data/evento";
 import { media } from "../../lib/media";
+import { prepararVideoSilencioso } from "../../lib/video";
 
 type Props = {
   /** El video espera a que el intro se descargue, para no competir por la red. */
@@ -35,12 +36,16 @@ export default function Hero({ cargarVideo, listo }: Props) {
         />
         {cargarVideo && !videoFalla && (
           <video
+            ref={prepararVideoSilencioso}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            onLoadedData={() => setVideoListo(true)}
+            // Por si iPhone no arrancó el autoplay; si lo bloquea (bajo consumo) se queda la foto
+            onLoadedMetadata={(e) => e.currentTarget.play().catch(() => {})}
+            // Se muestra cuando de verdad corre: un video pausado sin cuadro decodificado se ve negro en iOS
+            onPlaying={() => setVideoListo(true)}
             onError={() => setVideoFalla(true)}
             className="absolute inset-0 w-full h-full object-cover object-[50%_80%] transition-opacity duration-700 ease-out"
             style={{ opacity: videoListo ? 1 : 0 }}
