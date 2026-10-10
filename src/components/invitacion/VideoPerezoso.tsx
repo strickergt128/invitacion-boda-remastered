@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { prepararVideoSilencioso } from "../../lib/video";
+import ImagenSuave from "./ImagenSuave";
 import { useAparecer } from "./useAparecer";
 
 type Props = {
@@ -34,7 +35,7 @@ export default function VideoPerezoso({ fuentes, poster, alt, className = "relat
 
   return (
     <div ref={cerca.ref} className={className}>
-      <img src={poster} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+      <ImagenSuave src={poster} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
       {cerca.visible && (
         <video
           ref={(el) => {

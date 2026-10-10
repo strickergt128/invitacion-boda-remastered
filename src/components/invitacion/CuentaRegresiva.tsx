@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { evento } from "../../data/evento";
 import { media } from "../../lib/media";
+import ImagenSuave from "./ImagenSuave";
 import Revelar from "./Revelar";
 
 const OBJETIVO = new Date(evento.fechaISO).getTime();
@@ -48,9 +49,9 @@ export default function CuentaRegresiva() {
   ];
 
   return (
-    <section className="relative overflow-hidden py-24 md:py-32 px-5 text-white">
+    <section className="relative overflow-hidden bg-boda-cafe py-24 md:py-32 px-5 text-white">
       <div className="absolute inset-0">
-        <img
+        <ImagenSuave
           src={media.fondoCuentaRegresiva}
           alt=""
           loading="lazy"

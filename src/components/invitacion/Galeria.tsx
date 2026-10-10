@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { evento } from "../../data/evento";
+import ImagenSuave from "./ImagenSuave";
 import Lightbox from "./Lightbox";
 import Revelar from "./Revelar";
 
@@ -29,9 +30,9 @@ export default function Galeria() {
             <button
               onClick={() => setAbierta(i)}
               aria-label={`Ver foto: ${foto.alt}`}
-              className="presionable block h-[58svh] max-h-[520px] min-h-[320px] overflow-hidden rounded-sm shadow-lg shadow-boda-cafe/15"
+              className="presionable block bg-boda-crema/60 h-[58svh] max-h-[520px] min-h-[320px] overflow-hidden rounded-sm shadow-lg shadow-boda-cafe/15"
             >
-              <img
+              <ImagenSuave
                 src={foto.src}
                 alt={foto.alt}
                 width={foto.ancho}

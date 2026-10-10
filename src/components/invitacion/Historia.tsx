@@ -13,7 +13,7 @@ export default function Historia() {
               className={`grid md:grid-cols-2 gap-8 md:gap-14 items-center ${invertido ? "md:[&>*:first-child]:order-2" : ""}`}
             >
               <Revelar variante="imagen" className="relative aspect-[4/5] rounded-sm overflow-hidden shadow-xl shadow-boda-cafe/10">
-                <img src={bloque.foto} alt={bloque.alt} loading="lazy" className="w-full h-full object-cover" />
+                <img src={bloque.foto} alt={bloque.alt} className="w-full h-full object-cover" />
               </Revelar>
 
               <div className={`text-center ${invertido ? "md:text-right" : "md:text-left"}`}>
